@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM"],
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "strict": false,
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*.tsx", "src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
