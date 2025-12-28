@@ -28,9 +28,8 @@ export function Header({ onAdminClick }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/95 backdrop-blur-sm' : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black/95 backdrop-blur-sm' : 'bg-transparent'
+        }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
@@ -40,11 +39,37 @@ export function Header({ onAdminClick }: HeaderProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             onClick={() => scrollToSection('hero')}
-            className="text-white tracking-widest cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            JAGDISH GAVIT
+            {/* Red vertical line (SVG – bulletproof) */}
+            <svg
+              width="4"
+              height="40"
+              viewBox="0 0 4 40"
+              xmlns="http://www.w3.org/2000/svg"
+              className="shrink-0"
+            >
+              <rect width="4" height="40" fill="#7b0f0f" />
+            </svg>
+
+            {/* Logo text */}
+            <span
+              className="
+                text-white
+                uppercase
+                tracking-[0.35em]
+                text-sm
+                font-light
+                whitespace-nowrap
+              "
+              style={{ fontFamily: '"Times New Roman", serif' }}
+            >
+              JAGUU’Z PHOTOGRAPHY&FILMS
+            </span>
           </motion.button>
 
+
+          {/* Mobile Menu Button */}
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             {['Home', 'Gallery', 'About', 'Contact'].map((item, index) => (
@@ -59,7 +84,7 @@ export function Header({ onAdminClick }: HeaderProps) {
                 {item}
               </motion.button>
             ))}
-            
+
             {/* Admin Cloud Icon */}
             <motion.button
               initial={{ opacity: 0, y: -10 }}
