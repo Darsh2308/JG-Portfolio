@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
-import mobileBg from '/mobile-bg.jpeg';
+import mobileBg from '../assets/mobile-bg.jpeg';
 
 export function HeroMobile() {
   const scrollToGallery = () => {
