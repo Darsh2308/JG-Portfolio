@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
+import { HeroWrapper } from './components/HeroWrapper';
 import { Gallery } from './components/Gallery';
 import { About } from './components/About';
 import { Contact } from './components/Contact';
@@ -83,7 +83,7 @@ function AppContent() {
     <div className="min-h-screen">
       <Header onAdminClick={handleAdminClick} />
       <main>
-        <Hero />
+        <HeroWrapper />
         <Gallery />
         <About />
         <Contact />

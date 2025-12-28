@@ -212,7 +212,7 @@ export function Contact() {
             </div>
 
             <div className="pt-8 border-t border-neutral-200">
-              <h4 className="mb-4 tracking-wide">Office Hours</h4>
+              {/* <h4 className="mb-4 tracking-wide">Office Hours</h4>
               <div className="space-y-2 text-neutral-700">
                 <div className="flex justify-between">
                   <span>Monday - Friday</span>
@@ -224,9 +224,9 @@ export function Contact() {
                 </div>
                 <div className="flex justify-between">
                   <span>Sunday</span>
-                  <span>Closed</span>
+                  <span>Closed</span> 
                 </div>
-              </div>
+              </div> */}
             </div>
           </motion.div>
         </div>

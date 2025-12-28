@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { ChevronDown, Image } from 'lucide-react';
 import { Button } from './ui/button';
 
-// Import images from root directory
+// Desktop slideshow images
 import image1 from '/1.jpg';
 import image2 from '/2.jpg';
 import image3 from '/3.jpg';
@@ -15,8 +15,10 @@ export function Hero() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 10000); // Change image every 10 seconds
+      setCurrentImageIndex(
+        prevIndex => (prevIndex + 1) % images.length
+      );
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
@@ -29,15 +31,18 @@ export function Hero() {
   };
 
   const changeBackground = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentImageIndex(
+      prevIndex => (prevIndex + 1) % images.length
+    );
   };
 
   return (
     <section
       id="home"
-      className="relative h-screen w-full flex items-center justify-center overflow-hidden"
+      className="relative h-screen w-full hidden md:flex items-center justify-center overflow-hidden"
     >
-      {/* Background Image Slideshow */}
+
+      {/* DESKTOP — Slideshow Background */}
       <div className="absolute inset-0 z-0">
         {images.map((image, index) => (
           <motion.img
@@ -48,15 +53,16 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: index === currentImageIndex ? 1 : 0 }}
             transition={{ duration: 1.5, ease: 'easeInOut' }}
-            onContextMenu={(e) => e.preventDefault()}
-            onDragStart={(e) => e.preventDefault()}
+            onContextMenu={e => e.preventDefault()}
+            onDragStart={e => e.preventDefault()}
             draggable={false}
           />
         ))}
+
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
-      {/* Content */}
+      {/* CONTENT */}
       <div className="relative z-10 container mx-auto px-4 text-center text-white">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -68,10 +74,13 @@ export function Hero() {
             <br />
             CREATING MEMORIES
           </h1>
+
           <p className="max-w-2xl mx-auto mb-8 text-white/90">
             Where every glance becomes a story and every story feels like cinema.
-            <br/>Crafting fine art wedding films and photographs that live forever.
+            <br />
+            Crafting fine art wedding films and photographs that live forever.
           </p>
+
           <Button
             onClick={scrollToGallery}
             size="lg"
@@ -83,13 +92,12 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Change Background Button */}
+      {/* DESKTOP ONLY — Change Background Button */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}
         className="absolute bottom-8 right-8 z-10"
-        style={{ position: 'absolute', bottom: '2rem', right: '2rem', left: 'auto' }}
       >
         <Button
           onClick={changeBackground}
@@ -101,7 +109,7 @@ export function Hero() {
         </Button>
       </motion.div>
 
-      {/* Scroll Indicator */}
+      {/* SCROLL INDICATOR */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
