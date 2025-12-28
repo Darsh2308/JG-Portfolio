@@ -1,84 +1,79 @@
+import { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 import mobileBg from '../assets/mobile-bg.jpeg';
 
+const MOBILE_HEADER_HEIGHT = 72;
+
 export function HeroMobile() {
+  useEffect(() => {
+    const setVH = () => {
+      document.documentElement.style.setProperty(
+        '--vh',
+        `${window.innerHeight * 0.01}px`
+      );
+    };
+
+    setVH();
+    window.addEventListener('resize', setVH);
+    return () => window.removeEventListener('resize', setVH);
+  }, []);
+
   const scrollToGallery = () => {
     const gallery = document.getElementById('gallery');
     if (!gallery) return;
 
-    // 1. Try known scroll container first
-    const scrollRoot =
-      document.getElementById('scroll-root') ||
-      document.querySelector('[data-scroll-container]');
-
-    if (scrollRoot) {
-      const top =
-        gallery.getBoundingClientRect().top + scrollRoot.scrollTop;
-
-      scrollRoot.scrollTo({
-        top,
-        behavior: 'smooth',
-      });
-
-      return;
-    }
-
-    // 2. Fallback: window scrolling
-    const y =
-      gallery.getBoundingClientRect().top + window.pageYOffset;
-
-    if (y !== 0) {
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth',
-      });
-      return;
-    }
-
-    // 3. Last-resort fallback (always works)
-    window.location.hash = 'gallery';
+    window.scrollTo({
+      top: gallery.offsetTop,
+      behavior: 'smooth',
+    });
   };
 
   return (
     <section
       id="home"
-      className="relative h-screen w-full overflow-hidden md:hidden"
+      className="relative w-full overflow-hidden md:hidden"
+      style={{ minHeight: 'calc(var(--vh) * 100)' }}
     >
       {/* BACKGROUND */}
       <img
         src={mobileBg}
         alt="Hero Mobile Background"
-        className="absolute inset-0 h-full w-full object-cover select-none"
+        className="absolute inset-0 h-full w-full object-cover"
         draggable={false}
-        onContextMenu={(e) => e.preventDefault()}
-        onDragStart={(e) => e.preventDefault()}
       />
 
+      {/* DARK OVERLAY */}
       <div className="absolute inset-0 bg-black/50" />
 
-      {/* CENTER TEXT */}
-      <div className="relative z-10 flex h-full items-center justify-center px-4 pb-32 text-center text-white">
+      {/* TEXT BLOCK (OFFSET FROM FIXED HEADER) */}
+      <div
+        className="relative z-10 flex justify-center px-4 text-center text-white"
+        style={{
+          paddingTop: `calc(${MOBILE_HEADER_HEIGHT}px + env(safe-area-inset-top) + 1rem)`,
+        }}
+      >
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          className="max-w-[22rem]"
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h1 className="mb-6 tracking-wider">
+          <h1 className="mb-4 leading-tight tracking-wider">
             CAPTURING MOMENTS,
             <br />
             CREATING MEMORIES
           </h1>
 
-          <p className="mx-auto max-w-2xl text-white/90">
+          <p className="text-sm leading-relaxed text-white/90">
             Where every glance becomes a story and every story feels like cinema.
-            <br />
             Crafting fine art wedding films and photographs that live forever.
           </p>
         </motion.div>
       </div>
-      {/* VIEW PORTFOLIO BUTTON */}
+
+      {/* CTA BUTTON */}
       <motion.div
         className="absolute left-1/2 z-30 -translate-x-1/2"
         style={{ bottom: 'calc(env(safe-area-inset-bottom) + 3.5rem)' }}
@@ -90,7 +85,7 @@ export function HeroMobile() {
           type="button"
           onClick={scrollToGallery}
           size="lg"
-          className="group bg-white px-8 py-6 text-black transition-all hover:bg-white/90"
+          className="group bg-white px-8 py-6 text-black hover:bg-white/90"
         >
           View Portfolio
           <ChevronDown className="ml-2 transition-transform group-hover:translate-y-1" />
