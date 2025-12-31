@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
-import mobileBg from '../assets/mobile-bg.jpeg';
+import mobileBg from '../assets/mobile-bg.JPG';
 
 const MOBILE_HEADER_HEIGHT = 72;
 
