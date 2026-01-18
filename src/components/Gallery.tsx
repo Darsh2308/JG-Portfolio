@@ -15,16 +15,21 @@ export function Gallery() {
   const [visibleCount, setVisibleCount] = useState(12);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // Filter items by category
-  // "All" (selectedCategory === null) shows all items
-  // Specific category only shows items with that categoryId (not uncategorized items)
-  const filteredItems = selectedCategory === null
-    ? galleryItems
-    : galleryItems.filter(item => item.categoryId === selectedCategory);
+  // Filter items by category - only show items from selected category
+  const filteredItems = selectedCategory !== null
+    ? galleryItems.filter(item => item.categoryId === selectedCategory)
+    : []; // Show empty state until a category is selected
 
   // Get visible items based on visibleCount
   const visibleItems = filteredItems.slice(0, visibleCount);
   const hasMore = visibleCount < filteredItems.length;
+
+  // Set default category when categories are loaded
+  useEffect(() => {
+    if (categories.length > 0 && selectedCategory === null) {
+      setSelectedCategory(categories[0].id);
+    }
+  }, [categories, selectedCategory]);
 
   const openLightbox = (index: number) => {
     setSelectedImageIndex(index);
@@ -67,7 +72,7 @@ export function Gallery() {
     }
   };
 
-  const handleCategoryChange = (categoryId: number | null) => {
+  const handleCategoryChange = (categoryId: number) => {
     setSelectedCategory(categoryId);
     setVisibleCount(12); // Reset to initial count when changing category
   };
@@ -118,36 +123,30 @@ export function Gallery() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-12"
         >
-          <div className="flex items-center justify-between gap-4">
-            {/* Category Buttons */}
-            <div className="flex flex-wrap justify-center sm:justify-center flex-1 gap-3">
-              <button
-                onClick={() => handleCategoryChange(null)}
-                className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                  selectedCategory === null
-                    ? 'bg-black text-white'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
-              >
-                All
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategoryChange(category.id)}
-                  className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                    selectedCategory === category.id
-                      ? 'bg-black text-white'
-                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
+          {/* Categories Container with Horizontal Scroll */}
+          <div className="relative w-full overflow-hidden">
+            <div className="overflow-x-auto scrollbar-hide touch-pan-x" style={{ scrollBehavior: 'smooth', overflowY: 'hidden' }}>
+              <div className="flex items-center gap-3 pb-2" style={{ width: 'max-content' }}>
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategoryChange(category.id)}
+                    className={`px-6 py-2 rounded-full transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
+                      selectedCategory === category.id
+                        ? 'bg-black text-white'
+                        : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                    }`}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
             </div>
+          </div>
 
-            {/* View Mode Toggle - Mobile Only */}
-            <div className="flex gap-1.5 sm:hidden flex-shrink-0">
+          {/* View Mode Toggle - Mobile Only */}
+          <div className="mt-4 sm:hidden" style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+            <div className="flex gap-1.5 flex-shrink-0">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-lg transition-all duration-300 ${
@@ -186,9 +185,9 @@ export function Gallery() {
         {!isLoading && filteredItems.length === 0 && (
           <div className="text-center py-20">
             <p className="text-neutral-500">No items found</p>
-            {selectedCategory !== null && (
+            {selectedCategory === null && (
               <p className="text-neutral-400 text-sm mt-2">
-                Try selecting a different category
+                Loading categories...
               </p>
             )}
           </div>
@@ -248,7 +247,7 @@ export function Gallery() {
             {/* Mobile - List or Grid View */}
             <div className="sm:hidden">
               {viewMode === 'grid' ? (
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   {visibleItems.map((item, index) => (
                     <motion.div
                       key={item.id}
