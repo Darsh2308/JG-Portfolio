@@ -13,6 +13,21 @@ import { Toaster } from './components/ui/sonner';
 function AppContent() {
   const [currentView, setCurrentView] = useState<'main' | 'login' | 'dashboard'>('main');
 
+  // Register service worker for caching
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch((error) => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
+  }, []);
+
   // Prevent image downloads globally
   useEffect(() => {
     // Disable right-click on images and videos

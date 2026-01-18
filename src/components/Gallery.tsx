@@ -14,6 +14,7 @@ export function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   // Filter items by category - only show items from selected category
   const filteredItems = selectedCategory !== null
@@ -30,6 +31,34 @@ export function Gallery() {
       setSelectedCategory(categories[0].id);
     }
   }, [categories, selectedCategory]);
+
+  // Preload next batch of images
+  useEffect(() => {
+    const nextBatchStart = visibleCount;
+    const nextBatchEnd = Math.min(visibleCount + 6, filteredItems.length);
+    
+    for (let i = nextBatchStart; i < nextBatchEnd; i++) {
+      const item = filteredItems[i];
+      if (item?.type === 'image' && !loadedImages.has(item.id)) {
+        const img = new Image();
+        img.src = item.src;
+        img.onload = () => {
+          setLoadedImages(prev => new Set(prev).add(item.id));
+        };
+      }
+    }
+  }, [visibleCount, filteredItems, loadedImages]);
+
+  // Handle image load
+  const handleImageLoad = (itemId: number) => {
+    setLoadedImages(prev => new Set(prev).add(itemId));
+  };
+
+  // Handle image load error
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.error('Image failed to load:', e.currentTarget.src);
+    // You could set a fallback image here if needed
+  };
 
   const openLightbox = (index: number) => {
     setSelectedImageIndex(index);
@@ -218,6 +247,10 @@ export function Gallery() {
                         onContextMenu={(e) => e.preventDefault()}
                         onDragStart={(e) => e.preventDefault()}
                         draggable={false}
+                        loading="lazy"
+                        onLoad={() => handleImageLoad(item.id)}
+                        onError={handleImageError}
+                        style={{ opacity: loadedImages.has(item.id) ? 1 : 0.7 }}
                       />
                     ) : (
                       <div className="relative w-full">
@@ -266,6 +299,10 @@ export function Gallery() {
                           onContextMenu={(e) => e.preventDefault()}
                           onDragStart={(e) => e.preventDefault()}
                           draggable={false}
+                          loading="lazy"
+                          onLoad={() => handleImageLoad(item.id)}
+                          onError={handleImageError}
+                          style={{ opacity: loadedImages.has(item.id) ? 1 : 0.7 }}
                         />
                       ) : (
                         <div className="relative w-full h-full">
@@ -310,6 +347,10 @@ export function Gallery() {
                           onContextMenu={(e) => e.preventDefault()}
                           onDragStart={(e) => e.preventDefault()}
                           draggable={false}
+                          loading="lazy"
+                          onLoad={() => handleImageLoad(item.id)}
+                          onError={handleImageError}
+                          style={{ opacity: loadedImages.has(item.id) ? 1 : 0.7 }}
                         />
                       ) : (
                         <div className="relative w-full rounded-lg overflow-hidden">
