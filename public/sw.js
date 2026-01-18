@@ -45,8 +45,9 @@ self.addEventListener('fetch', (event) => {
               return response;
             }
 
-            // Only cache images and static assets
-            if (fetchRequest.url.match(/\.(jpg|jpeg|png|gif|webp|svg|js|css)$/)) {
+            // Only cache images and static assets from same origin
+            if (fetchRequest.url.match(/\.(jpg|jpeg|png|gif|webp|svg|js|css)$/) && 
+                fetchRequest.url.startsWith(self.location.origin)) {
               const responseToCache = response.clone();
               
               caches.open(CACHE_NAME)
